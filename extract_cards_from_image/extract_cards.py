@@ -23,11 +23,11 @@ def get_cards_from_image(filename):
     #gets the 13 (random guess value) biggest countours
     #TODO: make sure the contours have no overlaps or are inside each other
     num_contours_to_get = 13
-    all_biggest_countours = sorted_contours[:num_contours_to_get]
+    biggest_countours = sorted_contours[:num_contours_to_get]
 
     count = 0
     img_contour = image.copy()
-    for contour in all_biggest_countours:
+    for contour in biggest_countours:
 
         filename = "card_" + str(count) + ".jpg"
         
@@ -54,7 +54,7 @@ def get_cards_from_image(filename):
 
     #saves an image with the contour in the cards, to debug
     img_rect = image.copy()    
-    for contour in all_biggest_countours:
+    for contour in biggest_countours:
         
         #gets the rectangle associated with the contour
         x_top_left,y_top_left,width,height = cv2.boundingRect(contour)
