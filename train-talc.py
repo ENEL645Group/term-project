@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[36]:
+# In[52]:
 
 
+import sys
+sys.path.append(".")
 
 
-
-# In[37]:
+# In[55]:
 
 
 import numpy as np
@@ -18,37 +19,35 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import EfficientNetB1
 import matplotlib.pylab as plt
 from pathlib import Path
-import sys
-sys.path.append(".")
 from PlayingCardsGenerator import CardsDataGenerator
 
 
-# In[38]:
+# In[40]:
 
 
 model_name_it = "/home/drew.burritt/enel645/term-project/Outputs/Efficient_net_B1_it.h5"
 
 
-# In[39]:
+# In[41]:
 
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 
-# In[40]:
+# In[42]:
 
 
 early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 20)
 
 
-# In[41]:
+# In[43]:
 
 
 monitor_it = tf.keras.callbacks.ModelCheckpoint(model_name_it, monitor='val_loss',                                             verbose=0,save_best_only=True,                                             save_weights_only=False,                                             mode='min')
 
 
-# In[42]:
+# In[44]:
 
 
 def scheduler(epoch, lr):
@@ -57,50 +56,50 @@ def scheduler(epoch, lr):
     return lr
 
 
-# In[43]:
+# In[45]:
 
 
 lr_schedule = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose = 0)
 
 
-# In[44]:
+# In[46]:
 
 
 gen_params = {"featurewise_center":False,              "samplewise_center":False,              "featurewise_std_normalization":False,              "samplewise_std_normalization":False,              "rotation_range":30,              "width_shift_range":0.1,              "height_shift_range":0.1,               "shear_range":0.2,               "zoom_range":0.1,              "vertical_flip":True}
 
 
-# In[45]:
+# In[35]:
 
 
 generator = CardsDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.efficientnet.preprocess_input)
 
 
-# In[46]:
+# In[36]:
 
 
 bs = 16 # batch size
 
 
-# In[47]:
+# In[37]:
 
 
 path = Path("/home/drew.burritt/enel645/term-project/dataset/")
 
 
-# In[51]:
+# In[27]:
 
 
 img_height = 240
 img_width = 240
 
 
-# In[52]:
+# In[28]:
 
 
 classes_names = ["2_clubs","2_diamonds","2_hearts","2_spades",               "3_clubs","3_diamonds","3_hearts","3_spades",               "4_clubs","4_diamonds","4_hearts","4_spades",               "5_clubs","5_diamonds","5_hearts","5_spades",               "6_clubs","6_diamonds","6_hearts","6_spades",               "7_clubs","7_diamonds","7_hearts","7_spades",               "8_clubs","8_diamonds","8_hearts","8_spades",               "9_clubs","9_diamonds","9_hearts","9_spades",               "10_clubs","10_diamonds","10_hearts","10_spades",               "ace_clubs","ace_diamonds","ace_hearts","ace_spades",               "jack_clubs","jack_diamonds","jack_hearts","jack_spades",               "king_clubs","king_diamonds","king_hearts","king_spades",               "queen_clubs","queen_diamonds","queen_hearts","queen_spades"]
 
 
-# In[53]:
+# In[48]:
 
 
 train_generator = generator.flow_from_directory(
@@ -113,7 +112,7 @@ train_generator = generator.flow_from_directory(
     classes=classes_names) # set as training data
 
 
-# In[54]:
+# In[49]:
 
 
 validation_generator = generator.flow_from_directory(
@@ -126,7 +125,21 @@ validation_generator = generator.flow_from_directory(
     classes=classes_names) # set as validation data
 
 
-# In[55]:
+# In[58]:
+
+
+#Exploratory data analysis
+
+
+Xbatch, Ybatch = validation_generator.__getitem__(0)
+
+suits_names = train_generator.suits_names
+values_names = train_generator.values_names
+suits = Ybatch[0]
+values = Ybatch[1]
+
+
+# In[51]:
 
 
 # Defining the model
@@ -143,7 +156,7 @@ else:
     weigths_value = 'imagenet'    
 
 
-# In[58]:
+# In[32]:
 
 
 print(weigths_value)
@@ -157,13 +170,13 @@ base_model = tf.keras.applications.EfficientNetB1(
     classes=len(suits_names) + len(values_names))
 
 
-# In[57]:
+# In[33]:
 
 
 base_model.trainable = trainable_flag
 
 
-# In[4]:
+# In[26]:
 
 
 x1 = base_model(base_model.input, training = trainable_flag)
@@ -175,7 +188,7 @@ out2 = tf.keras.layers.Dense(len(values_names),activation = 'softmax')(x1)
 model = tf.keras.Model(inputs = base_model.input, outputs = [out1,out2])
 
 
-# In[83]:
+# In[22]:
 
 
 print("Initial Training Model")
