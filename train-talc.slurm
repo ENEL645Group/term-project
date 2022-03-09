@@ -6,7 +6,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=32G
 
-export PATH=~/software/miniconda3/bin:$PATH
+export PATH=/work/TALC/enel645_2022w/Software/miniconda3/bin:$PATH
 source activate tf2gpu
 
 python /home/drew.burritt/enel645/term-project/train-talc.py
