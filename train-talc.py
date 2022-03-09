@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[6]:
+# In[36]:
 
 
 import sys
 sys.path.append(".")
 
 
-# In[7]:
+# In[37]:
 
 
 import numpy as np
@@ -16,38 +16,38 @@ import glob
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications import EfficientNetB3
+from tensorflow.keras.applications import EfficientNetB1
 import matplotlib.pylab as plt
 from pathlib import Path
 from PlayingCardsGenerator import CardsDataGenerator
 
 
-# In[23]:
+# In[38]:
 
 
-model_name_it = "Efficient_net_B3_it.h5"
+model_name_it = "/home/drew.burritt/enel645/term-project/Outputs/Efficient_net_B1_it.h5"
 
 
-# In[24]:
+# In[39]:
 
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 
-# In[25]:
+# In[40]:
 
 
 early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 20)
 
 
-# In[26]:
+# In[41]:
 
 
 monitor_it = tf.keras.callbacks.ModelCheckpoint(model_name_it, monitor='val_loss',                                             verbose=0,save_best_only=True,                                             save_weights_only=False,                                             mode='min')
 
 
-# In[27]:
+# In[42]:
 
 
 def scheduler(epoch, lr):
@@ -56,50 +56,50 @@ def scheduler(epoch, lr):
     return lr
 
 
-# In[28]:
+# In[43]:
 
 
 lr_schedule = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose = 0)
 
 
-# In[29]:
+# In[44]:
 
 
 gen_params = {"featurewise_center":False,              "samplewise_center":False,              "featurewise_std_normalization":False,              "samplewise_std_normalization":False,              "rotation_range":30,              "width_shift_range":0.1,              "height_shift_range":0.1,               "shear_range":0.2,               "zoom_range":0.1,              "vertical_flip":True}
 
 
-# In[30]:
+# In[45]:
 
 
 generator = CardsDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.efficientnet.preprocess_input)
 
 
-# In[32]:
+# In[46]:
 
 
 bs = 16 # batch size
 
 
-# In[17]:
+# In[47]:
 
 
-path = Path("dataset/")
+path = Path("/home/drew.burritt/enel645/term-project/dataset/")
 
 
-# In[18]:
+# In[51]:
 
 
 img_height = 240
 img_width = 240
 
 
-# In[19]:
+# In[52]:
 
 
 classes_names = ["2_clubs","2_diamonds","2_hearts","2_spades",               "3_clubs","3_diamonds","3_hearts","3_spades",               "4_clubs","4_diamonds","4_hearts","4_spades",               "5_clubs","5_diamonds","5_hearts","5_spades",               "6_clubs","6_diamonds","6_hearts","6_spades",               "7_clubs","7_diamonds","7_hearts","7_spades",               "8_clubs","8_diamonds","8_hearts","8_spades",               "9_clubs","9_diamonds","9_hearts","9_spades",               "10_clubs","10_diamonds","10_hearts","10_spades",               "ace_clubs","ace_diamonds","ace_hearts","ace_spades",               "jack_clubs","jack_diamonds","jack_hearts","jack_spades",               "king_clubs","king_diamonds","king_hearts","king_spades",               "queen_clubs","queen_diamonds","queen_hearts","queen_spades"]
 
 
-# In[33]:
+# In[53]:
 
 
 train_generator = generator.flow_from_directory(
@@ -112,7 +112,7 @@ train_generator = generator.flow_from_directory(
     classes=classes_names) # set as training data
 
 
-# In[21]:
+# In[54]:
 
 
 validation_generator = generator.flow_from_directory(
@@ -125,7 +125,7 @@ validation_generator = generator.flow_from_directory(
     classes=classes_names) # set as validation data
 
 
-# In[1]:
+# In[55]:
 
 
 # Defining the model
@@ -142,21 +142,21 @@ else:
     weigths_value = 'imagenet'    
 
 
-# In[2]:
+# In[58]:
 
 
 print(weigths_value)
 print(include_top_flag)
 print(trainable_flag)
 
-base_model = tf.keras.applications.EfficientNetB3(
+base_model = tf.keras.applications.EfficientNetB1(
     weights=weigths_value, 
     input_shape=(img_height, img_width, 3),
     include_top=include_top_flag,
     classes=len(suits_names) + len(values_names))
 
 
-# In[3]:
+# In[57]:
 
 
 base_model.trainable = trainable_flag
@@ -198,5 +198,5 @@ history_it = model.fit(train_generator, epochs=10, verbose = 1,                 
 # In[ ]:
 
 
-model.save('final_model.h5')
+model.save('/home/drew.burritt/enel645/term-project/Outputs/Efficient_net_B1_it_final.h5')
 
