@@ -30,9 +30,12 @@ model_name_it = "/home/drew.burritt/enel645/term-project/Outputs/Efficient_net_B
 
 # In[41]:
 
-
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+else:
+  print("No GPU device found")
 
 
 # In[42]:
