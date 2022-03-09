@@ -17,7 +17,8 @@ public class App {
         App.targetDirectory = "D:/GitHub/meng-ucalgary/enel-645-project/dataset_test";
 
         this.split = 0.2;
-        this.uploaders = new String[] { "bg", "db", "jf", "kg", "ml", "ts" };
+        this.uploaders = new String[] { "bg", "db", "jf", "kg", "ml", "ts", "jose_brightness", "jose", "cards",
+                "other" };
 
         try {
             App.indexer = new PrintWriter(new BufferedWriter(new FileWriter("indexer.log", true)), true);
@@ -78,8 +79,24 @@ public class App {
                 uploaderSplit.get(4).push(f);
             }
 
-            else {
+            else if (f.getName().startsWith(this.uploaders[5])) {
                 uploaderSplit.get(5).push(f);
+            }
+
+            else if (f.getName().startsWith(this.uploaders[6])) {
+                uploaderSplit.get(6).push(f);
+            }
+
+            else if (f.getName().startsWith(this.uploaders[7])) {
+                uploaderSplit.get(7).push(f);
+            }
+
+            else if (f.getName().startsWith(this.uploaders[8])) {
+                uploaderSplit.get(8).push(f);
+            }
+
+            else {
+                uploaderSplit.get(9).push(f);
             }
         }
 
@@ -94,7 +111,7 @@ public class App {
         int x = r.nextInt(this.uploaders.length);
 
         while (uploaderSplit.get(x).size() == 0) {
-            x = r.nextInt(6);
+            x = r.nextInt(this.uploaders.length);
         }
 
         return x;
