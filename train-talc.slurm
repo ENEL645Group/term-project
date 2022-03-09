@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#SBATCH --partition=gpu
 #SBATCH --time=24:00:00
 #SBATCH --output=%x.out
 #SBATCH --cpus-per-task=3
