@@ -9,5 +9,5 @@
 export PATH=~/Software/miniconda3/bin:$PATH
 source activate enel645
 
-python /home/drew.burritt/enel645/term-project/train-talc.py
+python /home/mmylee/enel645/term-project/train-talc.py
 conda deactivate

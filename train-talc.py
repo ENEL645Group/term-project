@@ -25,8 +25,7 @@ from PlayingCardsGenerator import CardsDataGenerator
 # In[40]:
 
 
-model_name_it = "/home/drew.burritt/enel645/term-project/Outputs/Efficient_net_B1_it.h5"
-
+model_name_it = "/home/mmylee/enel645/term-project/Outputs/VGG_Scratch.h5"
 
 # In[41]:
 
@@ -86,7 +85,7 @@ bs = 16 # batch size
 # In[37]:
 
 
-path = Path("/home/drew.burritt/enel645/term-project/dataset/")
+path = Path("/home/mmylee/enel645/term-project/dataset/")
 
 
 # In[27]:
@@ -166,8 +165,12 @@ print(weigths_value)
 print(include_top_flag)
 print(trainable_flag)
 
-base_model = tf.keras.applications.EfficientNetB1(
-    weights=weigths_value, 
+base_model = tf.keras.applications.VGG16(
+    weights=weigths_value,
+    input_tensor=None,
+
+    pooling=None,
+    classifier_activation="softmax",
     input_shape=(img_height, img_width, 3),
     include_top=include_top_flag,
     classes=len(suits_names) + len(values_names))
@@ -215,5 +218,5 @@ history_it = model.fit(train_generator, epochs=10, verbose = 1,                 
 # In[ ]:
 
 
-model.save('/home/drew.burritt/enel645/term-project/Outputs/Efficient_net_B1_it_final.h5')
+model.save('/home/mmylee/enel645/term-project/Outputs/VGG16_Scratch.h5')
 
