@@ -4,8 +4,7 @@
 # In[36]:
 
 
-import sys
-sys.path.append(".")
+
 
 
 # In[37]:
@@ -19,6 +18,8 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import EfficientNetB1
 import matplotlib.pylab as plt
 from pathlib import Path
+import sys
+sys.path.append(".")
 from PlayingCardsGenerator import CardsDataGenerator
 
 
