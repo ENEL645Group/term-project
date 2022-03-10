@@ -25,7 +25,7 @@ from PlayingCardsGenerator import CardsDataGenerator
 # In[40]:
 
 
-model_name_it = "/home/mmylee/enel645/term-project/Outputs/VGG_Scratch.h5"
+model_name_it = "/home/mmylee/term-project/Outputs/VGG_Scratch.h5"
 
 # In[41]:
 
@@ -46,7 +46,7 @@ early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 20)
 # In[43]:
 
 
-monitor_it = tf.keras.callbacks.ModelCheckpoint(model_name_it, monitor='val_loss',                                             verbose=0,save_best_only=True,                                             save_weights_only=False,                                             mode='min')
+monitor_it = tf.keras.callbacks.ModelCheckpoint(model_name_it, monitor='val_loss',                                             verbose=0,save_best_only=True,                                             save_weights_only=True,                                             mode='min')
 
 
 # In[44]:
@@ -85,7 +85,7 @@ bs = 16 # batch size
 # In[37]:
 
 
-path = Path("/home/mmylee/enel645/term-project/dataset/")
+path = Path("/home/mmylee/term-project/dataset/")
 
 
 # In[27]:
@@ -155,7 +155,7 @@ if trainable_flag:
     weigths_value = None
 else:
     include_top_flag = False
-    weigths_value = 'imagenet'    
+    weigths_value = 'imagenet'
 
 
 # In[32]:
@@ -218,5 +218,5 @@ history_it = model.fit(train_generator, epochs=10, verbose = 1,                 
 # In[ ]:
 
 
-model.save('/home/mmylee/enel645/term-project/Outputs/VGG16_Scratch.h5')
+model.save_weights('/home/mmylee/term-project/Outputs/VGG16_Scratch.h5')
 
