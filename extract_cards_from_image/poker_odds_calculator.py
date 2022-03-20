@@ -145,7 +145,7 @@ if __name__ == '__main__':
     original_image_width = cv2.imread(args.image).shape[1]
 
     # thresholds to define to which player each card belongs
-    hero_threshold = original_image_width * 0.4
+    hero_threshold = original_image_width * 0.3
     villan_threshold = original_image_width * 0.6
 
     hero_cards, villan_cards, table_cards = classify_cards(
@@ -156,13 +156,13 @@ if __name__ == '__main__':
 
     board = table_cards
 
-    hero_hand = Combo(make_combo(hero_cards))
-    villan_hand = Combo(make_combo(villan_cards))
-
-    print("Hero hand = {}".format(hero_hand))
-    print("Villan hand = {}".format(villan_hand))
+    print("Hero hand = {}".format(hero_cards))
+    print("Villan hand = {}".format(villan_cards))
     print("Flop = {}".format(flop))
     print("Board = {}".format(board))
+
+    hero_hand = Combo(make_combo(hero_cards))
+    villan_hand = Combo(make_combo(villan_cards))
 
     exact_calculation = True
     verbose = True
