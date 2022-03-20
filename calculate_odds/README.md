@@ -1,4 +1,4 @@
-Run pip install with the requirements file to install dependencies:
+Run pip install with the requirements file to install the dependencies:
 
     pip3 install -r requirements.txt
 
