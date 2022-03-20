@@ -145,6 +145,9 @@ if __name__ == '__main__':
     original_image_width = cv2.imread(args.image).shape[1]
 
     # thresholds to define to which player each card belongs
+    # The hero cards will be on the leftmost part of the image,
+    # the villan cards will be on the rightmost part of the image.
+    # Table cards will be in the middle portion of the image
     hero_threshold = original_image_width * 0.3
     villan_threshold = original_image_width * 0.6
 
