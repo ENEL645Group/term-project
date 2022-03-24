@@ -20,12 +20,13 @@ from tensorflow.keras.applications import EfficientNetB1
 import matplotlib.pylab as plt
 from pathlib import Path
 from PlayingCardsGenerator import CardsDataGenerator
+from tensorflow.keras import layers
 
 
 # In[40]:
 
 
-model_name_it = "/home/mmylee/enel645/term-project/Outputs/VGG_Scratch.h5"
+model_name_it = "/home/mmylee/term-project/Outputs/VGG_Scratch.h5"
 
 # In[41]:
 
@@ -46,7 +47,7 @@ early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience = 20)
 # In[43]:
 
 
-monitor_it = tf.keras.callbacks.ModelCheckpoint(model_name_it, monitor='val_loss',                                             verbose=0,save_best_only=True,                                             save_weights_only=False,                                             mode='min')
+monitor_it = tf.keras.callbacks.ModelCheckpoint(model_name_it, monitor='val_loss',                                             verbose=0,save_best_only=True,                                             save_weights_only=True,                                             mode='min')
 
 
 # In[44]:
@@ -67,14 +68,23 @@ lr_schedule = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose = 0)
 # In[46]:
 
 
-gen_params = {"featurewise_center":False,              "samplewise_center":False,              "featurewise_std_normalization":False,              "samplewise_std_normalization":False,              "rotation_range":30,              "width_shift_range":0.1,              "height_shift_range":0.1,               "shear_range":0.2,               "zoom_range":0.1,              "vertical_flip":True}
-
+gen_params = {"featurewise_center":False,\
+              "samplewise_center":False,\
+              "featurewise_std_normalization":False,\
+              "samplewise_std_normalization":False,\
+              "rotation_range":90,\
+              "width_shift_range":0.3,\
+              "height_shift_range":0.3, \
+              "shear_range":0.3, \
+              "zoom_range":0.3,\
+              "vertical_flip":True, \
+              "brightness_range": (0.2, 2)}
 
 # In[35]:
 
 
-generator = CardsDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.efficientnet.preprocess_input)
-
+generator = CardsDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.vgg16.preprocess_input)
+generator = ImageDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.efficientnet.preprocess_input)
 
 # In[36]:
 
@@ -85,14 +95,14 @@ bs = 16 # batch size
 # In[37]:
 
 
-path = Path("/home/mmylee/enel645/term-project/dataset/")
+path = Path("/home/mmylee/term-project/dataset/")
 
 
 # In[27]:
 
 
-img_height = 240
-img_width = 240
+img_height = 224
+img_width = 224
 
 
 # In[28]:
@@ -135,10 +145,7 @@ validation_generator = generator.flow_from_directory(
 
 Xbatch, Ybatch = validation_generator.__getitem__(0)
 
-suits_names = train_generator.suits_names
-values_names = train_generator.values_names
-suits = Ybatch[0]
-values = Ybatch[1]
+
 
 
 # In[51]:
@@ -155,7 +162,7 @@ if trainable_flag:
     weigths_value = None
 else:
     include_top_flag = False
-    weigths_value = 'imagenet'    
+    weigths_value = 'imagenet'
 
 
 # In[32]:
@@ -165,6 +172,7 @@ print(weigths_value)
 print(include_top_flag)
 print(trainable_flag)
 
+
 base_model = tf.keras.applications.VGG16(
     weights=weigths_value,
     input_tensor=None,
@@ -173,25 +181,21 @@ base_model = tf.keras.applications.VGG16(
     classifier_activation="softmax",
     input_shape=(img_height, img_width, 3),
     include_top=include_top_flag,
-    classes=len(suits_names) + len(values_names))
-
+    classes=len(classes_names) )
+base_model.trainable = trainable_flag
+inputs = layers.Input(shape=(img_height,img_width,3))
+outputs = base_model(inputs)
+model = tf.keras.Model( inputs,  outputs)
 
 # In[33]:
 
 
-base_model.trainable = trainable_flag
+
 
 
 # In[26]:
 
 
-x1 = base_model(base_model.input, training = trainable_flag)
-#x3 = tf.keras.layers.GlobalAveragePooling2D()(x1)
-#x4 = tf.keras.layers.Flatten()(x3)`
-out1 = tf.keras.layers.Dense(len(suits_names), activation = 'softmax')(x1)
-out2 = tf.keras.layers.Dense(len(values_names),activation = 'softmax')(x1)
-
-model = tf.keras.Model(inputs = base_model.input, outputs = [out1,out2])
 
 
 # In[22]:
@@ -212,11 +216,12 @@ model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 0.001), #1e-4
 # In[86]:
 
 
-history_it = model.fit(train_generator, epochs=10, verbose = 1,                        workers=8, validation_data = (validation_generator),  callbacks= [monitor_it,early_stop, lr_schedule])
+
+history_it = model.fit(train_generator, epochs=1000, verbose = 1,                        workers=8, validation_data = (validation_generator),  callbacks= [monitor_it,early_stop, lr_schedule])
 
 
 # In[ ]:
 
 
-model.save('/home/mmylee/enel645/term-project/Outputs/VGG16_Scratch.h5')
-
+model.save_weights('/home/mmylee/term-project/Outputs/VGG16_Scratch.h5')
+np.save('/home/mmylee/term-project/Outputs/VGG16_Scratch52_history.npy',history_it.history)
