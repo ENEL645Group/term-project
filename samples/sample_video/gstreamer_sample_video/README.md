@@ -1,5 +1,7 @@
 Jetson Cards Classification Demo
 
+This code should be run on a Nvidia Jeton board.
+
 Runs a gstreamer pipeline that streams the video over UDP and runs inference on the image
 to identify which card is being displayed
 
