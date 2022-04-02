@@ -66,9 +66,8 @@ lr_schedule = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose = 0)
 
 # In[46]:
 
-
-gen_params = {"featurewise_center":False,              "samplewise_center":False,              "featurewise_std_normalization":False,              "samplewise_std_normalization":False,              "rotation_range":30,              "width_shift_range":0.1,              "height_shift_range":0.1,               "shear_range":0.2,               "zoom_range":0.1,              "vertical_flip":True}
-
+gen_params = {"samplewise_center":True,\
+              "samplewise_std_normalization":True}
 
 # In[35]:
 
