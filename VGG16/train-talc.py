@@ -4,10 +4,6 @@
 # In[52]:
 
 
-import sys
-sys.path.append(".")
-
-
 # In[55]:
 
 
@@ -19,7 +15,6 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import EfficientNetB1
 import matplotlib.pylab as plt
 from pathlib import Path
-from PlayingCardsGenerator import CardsDataGenerator
 from tensorflow.keras import layers
 
 
@@ -65,21 +60,15 @@ def scheduler(epoch, lr):
 lr_schedule = tf.keras.callbacks.LearningRateScheduler(scheduler,verbose = 0)
 
 
-# In[46]:
-
-gen_params = {"samplewise_center":True,\
-              "samplewise_std_normalization":True}
-
 # In[35]:
 
 
-generator = CardsDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.vgg16.preprocess_input)
-generator = ImageDataGenerator(**gen_params, validation_split=0.2,  preprocessing_function = tf.keras.applications.efficientnet.preprocess_input)
+generator = ImageDataGenerator(validation_split=0.2, preprocessing_function = tf.keras.applications.vgg16.preprocess_input)
 
 # In[36]:
 
 
-bs = 16 # batch size
+bs = 32 # batch size
 
 
 # In[37]:
@@ -198,7 +187,7 @@ print(model.summary())
 # In[5]:
 
 
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 0.001), #1e-4
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 0.5e-4),
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
